@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+:root {
+  --rg-ink: #0f1013;
+  --rg-panel: #17181d;
+  --rg-panel-2: #1f2128;
+  --rg-line: #2a2d36;
+  --rg-text: #eceef4;
+  --rg-muted: #8f93a3;
+  --rg-violet: #8b5cf6;
+  --rg-violet-soft: #b9a6fb;
+  --rg-ember: #fb923c;
+  --rg-sand: #facc15;
+  --rg-sky: #7cb2fb;
+  --rg-card: #1d1f26;
+  --rg-cardline: #2b2e38;
+  --rg-dot: #23262f;
+  --rg-edge: #4a5373;
+}
+
+[data-theme="light"] {
+  --rg-ink: #f4f5f9;
+  --rg-panel: #ffffff;
+  --rg-panel-2: #eef0f6;
+  --rg-line: #dfe2ec;
+  --rg-text: #171a26;
+  --rg-muted: #5f6680;
+  --rg-violet: #7c3aed;
+  --rg-violet-soft: #6d28d9;
+  --rg-ember: #c2410c;
+  --rg-sand: #92400e;
+  --rg-sky: #1d4ed8;
+  --rg-card: #ffffff;
+  --rg-cardline: #dfe2ec;
+  --rg-dot: #d5d8e4;
+  --rg-edge: #aab1c9;
+}
+
+@theme inline {
+  --font-sans: "Schibsted Grotesk", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --color-ink: var(--rg-ink);
+  --color-panel: var(--rg-panel);
+  --color-panel-2: var(--rg-panel-2);
+  --color-line: var(--rg-line);
+  --color-text: var(--rg-text);
+  --color-muted: var(--rg-muted);
+  --color-violet: var(--rg-violet);
+  --color-violet-soft: var(--rg-violet-soft);
+  --color-ember: var(--rg-ember);
+  --color-sand: var(--rg-sand);
+  --color-sky: var(--rg-sky);
+  --color-card: var(--rg-card);
+  --color-cardline: var(--rg-cardline);
+}
+
+html, body, #root { height: 100%; }
+body { background: var(--rg-ink); color: var(--rg-text); font-family: var(--font-sans); }
+
+:focus-visible { outline: 2px solid var(--rg-violet-soft); outline-offset: 2px; }
+
+.canvas-bg {
+  background-color: var(--rg-ink);
+  background-image: radial-gradient(var(--rg-dot) 1px, transparent 1px);
+  background-size: 24px 24px;
+  touch-action: none;
+}
+
+.edge { fill: none; stroke: var(--rg-edge); stroke-width: 1.5; transition: opacity .2s, stroke .2s; }
+.edge.focus { stroke: var(--rg-violet-soft); stroke-width: 2.8; }
+.edge.dim { opacity: .12; }
+
+@keyframes ripple-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.ripple-in { animation: ripple-in .3s ease-out; }
+@media (prefers-reduced-motion: reduce) { .ripple-in { animation: none; } }

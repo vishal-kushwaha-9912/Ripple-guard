@@ -1,0 +1,62 @@
+{
+  "project": {"id": "demo-project", "name": "RippleGuard Demo Shop", "description": "Synthetic web app used to demonstrate change-impact analysis."},
+  "nodes": [
+    {"id": "api-users", "label": "API", "name": "Users API v1", "path": "/api/v1/users", "version": "v1"},
+    {"id": "api-auth", "label": "API", "name": "Auth API v1", "path": "/api/v1/auth/login", "version": "v1"},
+    {"id": "api-billing", "label": "API", "name": "Billing API v1", "path": "/api/v1/billing", "version": "v1"},
+
+    {"id": "users-client", "label": "Component", "name": "UsersClient", "type": "service-client"},
+    {"id": "user-profile", "label": "Component", "name": "UserProfile", "type": "ui"},
+    {"id": "user-list", "label": "Component", "name": "UserList", "type": "ui"},
+    {"id": "dashboard-page", "label": "Component", "name": "DashboardPage", "type": "page"},
+    {"id": "admin-panel", "label": "Component", "name": "AdminPanel", "type": "page"},
+    {"id": "login-form", "label": "Component", "name": "LoginForm", "type": "ui"},
+    {"id": "auth-service", "label": "Component", "name": "AuthService", "type": "service", "critical": true},
+    {"id": "billing-page", "label": "Component", "name": "BillingPage", "type": "page", "critical": true},
+
+    {"id": "file-users-client", "label": "File", "name": "src/api/usersClient.js", "path": "src/api/usersClient.js", "language": "javascript"},
+    {"id": "file-endpoints", "label": "File", "name": "src/config/endpoints.json", "path": "src/config/endpoints.json", "language": "json"},
+    {"id": "file-auth-service", "label": "File", "name": "src/auth/authService.js", "path": "src/auth/authService.js", "language": "javascript"},
+
+    {"id": "users-integration-test", "label": "Test", "name": "Users integration test", "status": "passing"},
+    {"id": "user-profile-test", "label": "Test", "name": "UserProfile component test", "status": "passing"},
+    {"id": "dashboard-e2e-test", "label": "Test", "name": "Dashboard end-to-end test", "status": "passing"},
+    {"id": "session-test", "label": "Test", "name": "Session handling test", "status": "passing"},
+    {"id": "billing-test", "label": "Test", "name": "Billing page test", "status": "passing"},
+
+    {"id": "users-api-guide", "label": "Document", "name": "Users API guide", "title": "Users API guide", "path": "docs/users-api.md"},
+    {"id": "auth-guide", "label": "Document", "name": "Auth integration guide", "title": "Auth integration guide", "path": "docs/auth.md"},
+    {"id": "onboarding-readme", "label": "Document", "name": "Onboarding README", "title": "Onboarding README", "path": "README.md"},
+
+    {"id": "sdk-auth", "label": "Dependency", "name": "Authentication SDK", "version": "2.1.0"},
+
+    {"id": "decision-token-field", "label": "Decision", "name": "Use `token` as the login response field", "description": "Login returns { token } and clients read it directly.", "status": "accepted"}
+  ],
+  "edges": [
+    {"from": "users-client", "type": "CALLS", "to": "api-users", "source": "static-analysis"},
+    {"from": "file-users-client", "type": "IMPLEMENTS", "to": "users-client", "source": "static-analysis"},
+    {"from": "user-profile", "type": "USES", "to": "users-client", "source": "static-analysis"},
+    {"from": "user-list", "type": "USES", "to": "users-client", "source": "static-analysis"},
+    {"from": "dashboard-page", "type": "USES", "to": "user-profile", "source": "static-analysis"},
+    {"from": "admin-panel", "type": "USES", "to": "user-list", "source": "static-analysis"},
+    {"from": "file-endpoints", "type": "CONFIGURES", "to": "users-client", "source": "manual"},
+    {"from": "users-integration-test", "type": "TESTS", "to": "api-users", "source": "test-manifest"},
+    {"from": "user-profile-test", "type": "TESTS", "to": "user-profile", "source": "test-manifest"},
+    {"from": "dashboard-e2e-test", "type": "TESTS", "to": "dashboard-page", "source": "test-manifest"},
+    {"from": "users-api-guide", "type": "DOCUMENTS", "to": "api-users", "source": "manual"},
+    {"from": "onboarding-readme", "type": "REFERENCES", "to": "users-api-guide", "source": "manual"},
+
+    {"from": "login-form", "type": "CALLS", "to": "api-auth", "source": "static-analysis"},
+    {"from": "auth-service", "type": "CALLS", "to": "api-auth", "source": "static-analysis"},
+    {"from": "file-auth-service", "type": "IMPLEMENTS", "to": "auth-service", "source": "static-analysis"},
+    {"from": "auth-service", "type": "DEPENDS_ON", "to": "sdk-auth", "source": "package-lock"},
+    {"from": "dashboard-page", "type": "USES", "to": "auth-service", "source": "static-analysis"},
+    {"from": "session-test", "type": "TESTS", "to": "auth-service", "source": "test-manifest"},
+    {"from": "auth-guide", "type": "DOCUMENTS", "to": "api-auth", "source": "manual"},
+    {"from": "login-form", "type": "REFERENCES", "to": "decision-token-field", "source": "manual"},
+    {"from": "auth-service", "type": "REFERENCES", "to": "decision-token-field", "source": "manual"},
+
+    {"from": "billing-page", "type": "CALLS", "to": "api-billing", "source": "static-analysis"},
+    {"from": "billing-test", "type": "TESTS", "to": "billing-page", "source": "test-manifest"}
+  ]
+}
